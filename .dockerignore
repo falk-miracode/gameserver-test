@@ -1,0 +1,26 @@
+node_modules
+dist
+build
+.git
+.github
+.vscode
+*.log
+.env*
+.DS_Store
+Thumbs.db
+
+# Frontend specific
+packages/frontend/dist
+packages/frontend/node_modules
+
+# Backend specific  
+packages/backend/dist
+packages/backend/node_modules
+
+# Schemas specific
+packages/schemas/dist
+packages/schemas/node_modules
+
+# Development files
+*.md
+!README.md

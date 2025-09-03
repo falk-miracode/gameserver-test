@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    ports:
+      - "2567:2567"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost:2567/monitor",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Redis for scaling
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    profiles:
+      - with-redis
+
+  # Backend with Redis
+  backend-redis:
+    build: .
+    ports:
+      - "2567:2567"
+    environment:
+      - NODE_ENV=production
+      - REDIS=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+    profiles:
+      - with-redis
