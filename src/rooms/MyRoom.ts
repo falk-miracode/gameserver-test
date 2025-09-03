@@ -6,6 +6,7 @@ export class MyRoom extends Room<MyRoomState> {
 
   onCreate(options: any) {
     this.state = new MyRoomState();
+    this.presence.publish(this.roomId, this.state);
 
     this.onMessage("type", (client, message) => {
       this.state.mySynchronizedProperty = message;
