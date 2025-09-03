@@ -18,6 +18,12 @@ COPY packages/backend/ ./packages/backend/
 # Build schemas first, then backend
 RUN pnpm build:schemas && pnpm build:backend
 
+# Debug: List built files
+RUN ls -la packages/schemas/ || echo "schemas directory not found"
+RUN ls -la packages/schemas/dist/ || echo "schemas dist directory not found"  
+RUN ls -la packages/backend/ || echo "backend directory not found"
+RUN ls -la packages/backend/dist/ || echo "backend dist directory not found"
+
 # Production stage
 FROM node:22-alpine AS runtime
 WORKDIR /usr/src/app
@@ -34,6 +40,10 @@ RUN pnpm install --prod --frozen-lockfile
 # Copy built application
 COPY --from=build /usr/src/app/packages/schemas/dist ./packages/schemas/dist
 COPY --from=build /usr/src/app/packages/backend/dist ./packages/backend/dist
+
+# Debug: Verify copied files
+RUN ls -la packages/backend/ || echo "backend directory not found in runtime"
+RUN ls -la packages/backend/dist/ || echo "backend dist directory not found in runtime"
 
 # Set working directory to backend
 WORKDIR /usr/src/app/packages/backend
