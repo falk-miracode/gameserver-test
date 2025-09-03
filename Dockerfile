@@ -1,17 +1,18 @@
-FROM node:22
-
+# Build-Stage
+FROM node:22 AS build
 WORKDIR /usr/src/app
-
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package.json ./
-COPY pnpm-lock.yaml ./
-
-RUN npm install -g corepack@0.24.1 && corepack enable
-# run this for production
-RUN pnpm i --only=production --frozen-lockfile
-
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
+RUN pnpm install --frozen-lockfile
 COPY . .
+RUN pnpm run build
 
+# Runtime-Stage
+FROM node:22-alpine AS runtime
+WORKDIR /usr/src/app
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
+RUN pnpm install --prod --frozen-lockfile
+COPY --from=build /usr/src/app/build ./build
 EXPOSE 2567
-
-CMD [ "pnpm", "start" ]
+CMD ["node", "build/index.js"]
