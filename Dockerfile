@@ -1,5 +1,5 @@
 # Multi-stage build for Colyseus Backend in Monorepo
-FROM node:22-alpine AS base
+FROM node:22 AS base
 WORKDIR /usr/src/app
 RUN corepack enable
 
