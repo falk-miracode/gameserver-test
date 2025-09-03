@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "tsx watch src/index.ts",
-    "build": "pnpm run clean && tsc",
+    "build": "pnpm run clean && tsc --project tsconfig.build.json",
     "clean": "rimraf dist",
     "dev": "tsx watch src/index.ts",
     "test": "mocha -r tsx test/**_test.ts --exit --timeout 15000",

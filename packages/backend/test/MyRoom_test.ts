@@ -26,9 +26,11 @@ describe("testing your Colyseus app", () => {
     // wait for state sync
     await room.waitForNextPatch();
 
-    assert.deepStrictEqual(
-      { mySynchronizedProperty: "Hello world" },
-      client1.state.toJSON()
-    );
+    // wait a bit more for state to be fully synchronized
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    assert.deepStrictEqual(client1.state.toJSON(), {
+      mySynchronizedProperty: "Hello world",
+    });
   });
 });
