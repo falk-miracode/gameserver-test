@@ -77,6 +77,10 @@ SolidJS Single Page Application.
 - 🎨 Modernes, responsives Design
 - ⚡ SolidJS mit TypeScript
 
+**Konfiguration:**
+- Kopiere `.env.example` zu `.env` im Frontend-Verzeichnis
+- Setze `VITE_COLYSEUS_URL` auf die URL deines Colyseus Servers
+
 ## 🔧 Development
 
 ### Neue Schemas hinzufügen

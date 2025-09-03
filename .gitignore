@@ -3,3 +3,8 @@ build
 dist
 .colyseus-cloud.json
 .devmode.json
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

@@ -39,9 +39,11 @@ const App: Component = () => {
   };
 
   onMount(() => {
-    const newClient = new Client("ws://localhost:2567");
+    const serverUrl =
+      import.meta.env.VITE_COLYSEUS_URL || "ws://localhost:2567";
+    const newClient = new Client(serverUrl);
     setClient(newClient);
-    addMessage("Client initialized. Ready to connect to server.", "system");
+    addMessage(`Client initialized. Server: ${serverUrl}`, "system");
   });
 
   onCleanup(() => {
