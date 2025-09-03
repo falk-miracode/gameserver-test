@@ -1,8 +1,4 @@
-FROM node:22-alpine
-
-RUN apk update && apk upgrade
-
-ENV PORT 2567
+FROM node:22
 
 WORKDIR /usr/src/app
 
