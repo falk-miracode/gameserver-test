@@ -1,48 +1,39 @@
 # Multi-stage build for Colyseus Backend in Monorepo
-FROM node:22 AS base
+FROM node:22 AS build
 WORKDIR /usr/src/app
 RUN corepack enable
 
-# Dependencies stage
-FROM base AS deps
+# Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/schemas/package.json ./packages/schemas/
 COPY packages/backend/package.json ./packages/backend/
+
+# Install all dependencies (including dev dependencies for building)
 RUN pnpm install --frozen-lockfile
 
-# Build stage  
-FROM base AS build
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/schemas/package.json ./packages/schemas/
-COPY packages/backend/package.json ./packages/backend/
-COPY --from=deps /usr/src/app/node_modules ./node_modules
+# Copy source code
 COPY packages/schemas/ ./packages/schemas/
 COPY packages/backend/ ./packages/backend/
+
+# Build schemas first, then backend
 RUN pnpm build:schemas && pnpm build:backend
 
-# Production dependencies
-FROM base AS prod-deps
+# Production stage
+FROM node:22-alpine AS runtime
+WORKDIR /usr/src/app
+RUN corepack enable
+
+# Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/schemas/package.json ./packages/schemas/
 COPY packages/backend/package.json ./packages/backend/
+
+# Install only production dependencies
 RUN pnpm install --prod --frozen-lockfile
-
-# Runtime stage
-FROM node:22-alpine AS runtime
-WORKDIR /usr/src/app
-
-# Copy production dependencies
-COPY --from=prod-deps /usr/src/app/node_modules ./node_modules
-COPY --from=prod-deps /usr/src/app/packages ./packages
 
 # Copy built application
 COPY --from=build /usr/src/app/packages/schemas/dist ./packages/schemas/dist
 COPY --from=build /usr/src/app/packages/backend/dist ./packages/backend/dist
-
-# Copy package files for runtime
-COPY package.json pnpm-workspace.yaml ./
-COPY packages/schemas/package.json ./packages/schemas/
-COPY packages/backend/package.json ./packages/backend/
 
 # Set working directory to backend
 WORKDIR /usr/src/app/packages/backend
