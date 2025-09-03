@@ -21,7 +21,7 @@ export default config({
           username: process.env.REDIS_USERNAME,
           password: process.env.REDIS_PASSWORD,
           db: process.env.REDIS_DB ? parseInt(process.env.REDIS_DB) : 0,
-          tls: process.env.REDIS_TLS === "true" ? {} : undefined,
+          tls: { rejectUnauthorized: false },
         })
       : undefined,
     presence: redis
@@ -33,7 +33,7 @@ export default config({
           username: process.env.REDIS_USERNAME,
           password: process.env.REDIS_PASSWORD,
           db: process.env.REDIS_DB ? parseInt(process.env.REDIS_DB) : 0,
-          tls: process.env.REDIS_TLS === "true" ? {} : undefined,
+          tls: { rejectUnauthorized: false },
         })
       : undefined,
   },
