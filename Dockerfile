@@ -2,7 +2,7 @@
 FROM node:22 AS build
 WORKDIR /usr/src/app
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
+RUN corepack enable
 RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm run build
@@ -11,7 +11,7 @@ RUN pnpm run build
 FROM node:22-alpine AS runtime
 WORKDIR /usr/src/app
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
+RUN corepack enable
 RUN pnpm install --prod --frozen-lockfile
 COPY --from=build /usr/src/app/build ./build
 EXPOSE 2567
