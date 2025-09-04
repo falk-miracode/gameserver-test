@@ -113,29 +113,6 @@ docker run -p 2567:2567 gameserver-test-backend
 docker run -p 2567:2567 -e NODE_ENV=production gameserver-test-backend
 ```
 
-### Mit Docker Compose
-
-```bash
-# Einfacher Start
-docker-compose up -d
-
-# Mit Redis für Skalierung
-docker-compose --profile with-redis up -d
-
-# Logs anzeigen
-docker-compose logs -f
-
-# Stoppen
-docker-compose down
-```
-
-### Multi-Container Setup
-
-```bash
-# Mehrere Backend-Instanzen mit Load Balancer
-docker-compose -f docker-compose.yml -f docker-compose.scale.yml up -d --scale backend=3
-```
-
 ## 🧪 Testing
 
 ```bash
