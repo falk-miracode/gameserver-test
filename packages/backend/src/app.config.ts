@@ -8,7 +8,9 @@ import { playground } from "@colyseus/playground";
 import { MyRoom } from "./rooms/MyRoom";
 import { RedisDriver, RedisPresence } from "colyseus";
 
-const redis = process.env.REDIS ?? false;
+const redis = process.env.REDIS
+  ? process.env.REDIS.toLowerCase() === "true"
+  : false;
 
 export default config({
   options: {
